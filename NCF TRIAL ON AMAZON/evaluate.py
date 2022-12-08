@@ -14,9 +14,13 @@ def ndcg(gt_item, pred_items):
 		return np.reciprocal(np.log2(index+2))
 	return 0
 
+def hit_sust(sust, pred_items):
+	num_hit = len(set(sust).intersection(set(pred_items)))
+	return num_hit/10
 
-def metrics(model, test_loader, top_k):
-	HR, NDCG = [], []
+
+def metrics(model, test_loader, top_k, sust):
+	HR, NDCG, Sustainable_Prop = [], [], []
 
 	for user, item, label in test_loader:
 		# user = user.cuda()
@@ -26,9 +30,11 @@ def metrics(model, test_loader, top_k):
 		_, indices = torch.topk(predictions, top_k)
 		recommends = torch.take(
 				item, indices).cpu().numpy().tolist()
+		# print(recommends)
 
 		gt_item = item[0].item()
 		HR.append(hit(gt_item, recommends))
 		NDCG.append(ndcg(gt_item, recommends))
+		Sustainable_Prop.append(hit_sust(sust,recommends))
 
-	return np.mean(HR), np.mean(NDCG)
+	return np.mean(HR), np.mean(NDCG), np.mean(Sustainable_Prop)

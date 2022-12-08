@@ -12,6 +12,9 @@ def load_all(test_num=100):
 	train_data = pd.read_csv(
 		config.train_rating, header=None, names=['user', 'item'],
 		usecols=[0, 1], dtype={0: np.int32, 1: np.int32})
+	sust_data = pd.read_csv(
+		'sust.csv', header=None, names=['susItem'], dtype={0: np.int32})
+	sust = sust_data['susItem'].values.tolist()
 
 	user_num = train_data['user'].max() + 1
 	item_num = train_data['item'].max() + 2
@@ -35,7 +38,7 @@ def load_all(test_num=100):
 			for i in eval(arr[1])[:]:
 				test_data.append([u, int(i)])
 			line = fd.readline()
-	return train_data, test_data, user_num, item_num, train_mat
+	return train_data, test_data, user_num, item_num, train_mat, sust
 
 
 class NCFData(data.Dataset):
