@@ -29,7 +29,7 @@ parser.add_argument("--dropout",
 	help="dropout rate")
 parser.add_argument("--batch_size", 
 	type=int, 
-	default=4096,
+	default=1024,
 	help="batch size for training")
 parser.add_argument("--epochs", 
 	type=int,
@@ -116,7 +116,7 @@ if __name__ == "__main__":
 		train_loader.dataset.ng_sample()
 		freq_0 = 0.98
 		freq_1 = 0.02
-		theta = 1
+		theta = 0.9
 
 		for user, item, label,t_sust in train_loader:
 			# print(222,sust)
@@ -124,7 +124,7 @@ if __name__ == "__main__":
 			# item = item.cuda()
 			# label = label.float().cuda()
 
-			# if is_sus == 0:
+			# if is_sus == 1:
 			u1 = user[(t_sust != 0).nonzero()].reshape(-1)
 			t1 = item[(t_sust != 0).nonzero()].reshape(-1)
 			l1 = label[(t_sust != 0).nonzero()].reshape(-1)
@@ -134,7 +134,7 @@ if __name__ == "__main__":
 			prediction1 = model(u1, t1)
 			loss1 = loss_function(prediction1, l1)
 
-			# elif is_sus == 1:
+			# elif is_sus == 0:
 			u0 = user[(t_sust == 0).nonzero()].reshape(-1)
 			t0 = item[(t_sust == 0).nonzero()].reshape(-1)
 			l0 = label[(t_sust == 0).nonzero()].reshape(-1)
@@ -146,9 +146,10 @@ if __name__ == "__main__":
 
 			# prediction = model(user, item)
 
-			label = label.float()
+			r_0 = len(l0)/(len(l0)+len(l1))
+			r_1 = len(l1)/(len(l0)+len(l1))
 
-			loss = (1/(0.98)**theta)*loss0+(1/(0.02)**theta)*loss1
+			loss = (1/(r_0**theta))*loss0 + (1/(r_1**theta))*loss1
 			# loss = loss_function(prediction, label)
 			loss.backward()
 			optimizer.step()
