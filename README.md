@@ -5,5 +5,5 @@ Recommender systems on e-commerce platforms are an important branch of recommend
 ## Data Set
 Click [here](https://drive.google.com/file/d/1Sk3VQfgSO8kRl5xOP5po2PK3CwCslTKk/view?usp=sharing) to get the electronics dataset
 ## Model
-Baseline Model - Neural Collaborative Filtering
+Baseline Model - Neural Collaborative Filtering   
 Metrics - HR, NDCG, and Sustainable_Prop
